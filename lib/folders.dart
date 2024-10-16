@@ -10,6 +10,18 @@ class Folders extends StatefulWidget {
 class _FoldersState extends State<Folders> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Folders'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Folders')
+          ],
+        ),
+      ),
+    );
   }
 }

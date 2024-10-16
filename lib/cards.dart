@@ -1,3 +1,4 @@
+import 'package:card_organizer/folders.dart';
 import 'package:flutter/material.dart';
 
 class Cards extends StatefulWidget {
@@ -10,6 +11,23 @@ class Cards extends StatefulWidget {
 class _CardsState extends State<Cards> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Cards'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Cards here')
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed:(){
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => Folders()));
+        },
+        child: Text('>>')),
+    );
   }
 }
