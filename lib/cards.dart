@@ -38,9 +38,73 @@ class _CardsState extends State<Cards> {
                 itemBuilder: (context, index){
                   final card = _cards[index];
                   return Card(
-                    child:Image.asset(
-                          card['image_url']
-                        )
+                    child:Column(
+                      children: [
+                        Expanded(
+                          child: Image.asset(
+                                card['image_url']
+                              ),
+                        ),
+                        Text('Card ID: ${card['id'].toString()}'),
+                        SizedBox(height: 5),
+                        Text('FolderID: ${card['folder_id'].toString()}'),
+                        ElevatedButton(
+                          onPressed: (){
+                            showDialog(
+                              context: context, 
+                              builder: (_) => AlertDialog(
+                                title: Text('Remove/update folder'),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: (){
+                                        
+                                      },
+                                      child: Text('Remove')
+                                    ),
+                                    Row(
+                                      children: [
+                                        FloatingActionButton(
+                                        onPressed: (){
+                                            _updateFolderidForcards(card['id'],3);
+                                        },
+                                        child: Icon(Icons.diamond)
+                                        ),
+                                        FloatingActionButton(
+                                          onPressed: (){
+                                              _updateFolderidForcards(card['id'],2);
+                                          },
+                                          child: Icon(Icons.heart_broken)
+                                        ),
+                                        FloatingActionButton(
+                                          onPressed: (){
+                                              _updateFolderidForcards(card['id'],1);
+                                          },
+                                          child: Icon(Icons.change_history) //spades
+                                        ),
+                                        FloatingActionButton(
+                                          onPressed: () {
+                                            _updateFolderidForcards(card['id'],4);
+                                          },
+                                          child: Icon(Icons.spa) //clubs
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ));
+                          }, 
+                          child: Text('Folder')
+                        ),
+                        ElevatedButton(
+                          onPressed: (){
+                            
+                          }, 
+                          child: Text('Edit'))
+
+                      ],
+                    )
                   );
                 }))
           ],
@@ -72,5 +136,11 @@ class _CardsState extends State<Cards> {
     setState(() {
       _cards = cards;
     });
+  }
+
+  void _updateFolderidForcards(int cardid,int folderid) async{
+    await dbhelper.updateFolderID(cardid, folderid);
+    _viewCards();
+    Navigator.pop(context);
   }
 }

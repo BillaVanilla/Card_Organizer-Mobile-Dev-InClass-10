@@ -75,4 +75,21 @@ class DatabaseHelper {
     final db = await initializeDatabase();
     return await db.query(DatabaseHelper.table_2);
   }
+
+  Future<int> updateFolderID(int cardid, int folderid) async{
+    final db = await DatabaseHelper.initializeDatabase();
+
+    Map<String, dynamic> values = {
+    DatabaseHelper.foreignColumn: folderid,
+    };
+
+    return await db.update(
+    DatabaseHelper.table_2,
+    values,
+    where: '${DatabaseHelper.columnid_2} = ?',
+    whereArgs: [cardid],
+    );
+
+
+  }
 }
