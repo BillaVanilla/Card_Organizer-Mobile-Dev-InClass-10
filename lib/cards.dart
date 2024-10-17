@@ -117,6 +117,11 @@ class _CardsState extends State<Cards> {
                           }, 
                           child: Text('Folder')
                         ),
+                        ElevatedButton(
+                          onPressed: (){
+                            _deleteCard(card['id']);
+                          }, 
+                          child: Text('Delete'))
                       ],
                     )
                   );
@@ -165,7 +170,12 @@ class _CardsState extends State<Cards> {
     );
 
       await dbhelper.insertCard(selectedCard['Name']!, selectedCard['suit']!, selectedCard['image_url']!);
-      _viewCards(); // Refresh the list of cards
+      _viewCards(); 
     
+  }
+
+  void _deleteCard(int id) async{
+    await dbhelper.deleteCard(id);
+    _viewCards();
   }
 }

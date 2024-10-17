@@ -89,7 +89,14 @@ class DatabaseHelper {
     where: '${DatabaseHelper.columnid_2} = ?',
     whereArgs: [cardid],
     );
+  }
 
-
+  Future<int> deleteCard(int id) async {
+    final db = await initializeDatabase();
+    return await db.delete(
+      'cards',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 }
