@@ -12,6 +12,12 @@ class Cards extends StatefulWidget {
 class _CardsState extends State<Cards> {
   final dbhelper = DatabaseHelper();
   List<Map<String, dynamic>> _cards = [];
+
+  String? _selectedCard;
+  List<Map<String,String>> cardddd = [
+    {'Name': 'Jack', 'suit' : 'Clubs','image_url':'assets/jack_of_clubs.png'},
+    {'Name': 'king', 'suit' : 'Hearts','image_url':'assets/king_of_hearts.png'}
+  ];
   
   @override
   void initState(){
@@ -29,7 +35,21 @@ class _CardsState extends State<Cards> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(_cards.length.toString()),
+            DropdownButton<String>(
+              hint: Text('Insert card'),
+              value: _selectedCard,
+              items: cardddd.map((card) {
+                return DropdownMenuItem<String>(
+                  value: card['Name'],
+                  child: Text(card['Name']!),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedCard = newValue;
+                }); 
+                _addSelectedCardToDatabase(newValue!);
+             }),
             Expanded(
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -97,12 +117,6 @@ class _CardsState extends State<Cards> {
                           }, 
                           child: Text('Folder')
                         ),
-                        ElevatedButton(
-                          onPressed: (){
-                            
-                          }, 
-                          child: Text('Edit'))
-
                       ],
                     )
                   );
@@ -142,5 +156,16 @@ class _CardsState extends State<Cards> {
     await dbhelper.updateFolderID(cardid, folderid);
     _viewCards();
     Navigator.pop(context);
+  }
+
+  void _addSelectedCardToDatabase(String cardName) async {
+    Map<String, String>? selectedCard = cardddd.firstWhere(
+      (card) => card['Name'] == cardName,
+      orElse: () => {},
+    );
+
+      await dbhelper.insertCard(selectedCard['Name']!, selectedCard['suit']!, selectedCard['image_url']!);
+      _viewCards(); // Refresh the list of cards
+    
   }
 }
