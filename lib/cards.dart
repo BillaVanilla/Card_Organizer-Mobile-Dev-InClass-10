@@ -59,7 +59,7 @@ class _CardsState extends State<Cards> {
                                   children: [
                                     ElevatedButton(
                                       onPressed: (){
-                                        
+                                        _updateFolderidForcards(card['id'], null);
                                       },
                                       child: Text('Remove')
                                     ),
@@ -138,7 +138,7 @@ class _CardsState extends State<Cards> {
     });
   }
 
-  void _updateFolderidForcards(int cardid,int folderid) async{
+  void _updateFolderidForcards(int cardid,int? folderid) async{
     await dbhelper.updateFolderID(cardid, folderid);
     _viewCards();
     Navigator.pop(context);

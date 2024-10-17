@@ -76,7 +76,7 @@ class DatabaseHelper {
     return await db.query(DatabaseHelper.table_2);
   }
 
-  Future<int> updateFolderID(int cardid, int folderid) async{
+  Future<int> updateFolderID(int cardid, int? folderid) async{
     final db = await DatabaseHelper.initializeDatabase();
 
     Map<String, dynamic> values = {
