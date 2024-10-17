@@ -1,8 +1,20 @@
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
-  static const databaseName = 'your_database.db';
+  static const databaseName = 'database.db';
   static const databaseVersion = 1;
+
+  static const table_1 = 'folders';
+  static const columnid_1 = 'id';
+  static const columnName_1 = 'folder_name';
+  static const columnTime_1 = 'created_at';
+
+  static const table_2 = 'cards';
+  static const columnid_2 = 'ID';
+  static const columnName_2 = 'Name';
+  static const columnSuit_2 = 'suit';
+  static const columnUrl_2 = 'image_url';
+  static const foreignColumn = 'folder_id';
 
   static Future<Database> initializeDatabase() async {
     return await openDatabase(
@@ -14,21 +26,38 @@ class DatabaseHelper {
 
   static Future<void> _onCreate(Database db, int version) async {
     await db.rawQuery('''
-      CREATE TABLE folders (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        folder_name TEXT NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      CREATE TABLE $table_1 (
+        $columnid_1 INTEGER PRIMARY KEY AUTOINCREMENT,
+        $columnName_1 TEXT NOT NULL,
+        $columnTime_1 TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     ''');
     
     await db.rawQuery('''
-      CREATE TABLE cards (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        folder_id INTEGER NOT NULL,
-        card_name TEXT NOT NULL,
-        card_content TEXT,
-        FOREIGN KEY (folder_id) REFERENCES folders(id) ON DELETE CASCADE
+      CREATE TABLE $table_2 (
+        $columnid_2 INTEGER PRIMARY KEY AUTOINCREMENT,
+        $foreignColumn INTEGER NOT NULL,
+        $columnName_2 TEXT NOT NULL,
+        $columnSuit_2 TEXT,
+        $columnUrl_2 TEXT,
+        FOREIGN KEY ($foreignColumn) REFERENCES folders($columnid_1) ON DELETE CASCADE
       )
     ''');
   }
+
+  Future<int> insertFolder(String folderName) async {
+    final db = await DatabaseHelper.initializeDatabase();
+    return await db.insert(
+      DatabaseHelper.table_1,
+      {
+        DatabaseHelper.columnName_1: folderName,
+      },
+    );
+  }
+
+  Future<List<Map<String, dynamic>>> getAllFolders() async {
+    final db = await DatabaseHelper.initializeDatabase();
+    return await db.query(DatabaseHelper.table_1);
+  }
+  
 }
