@@ -10,7 +10,7 @@ class DatabaseHelper {
   static const columnTime_1 = 'created_at';
 
   static const table_2 = 'cards';
-  static const columnid_2 = 'ID';
+  static const columnid_2 = 'id';
   static const columnName_2 = 'Name';
   static const columnSuit_2 = 'suit';
   static const columnUrl_2 = 'image_url';
@@ -36,8 +36,8 @@ class DatabaseHelper {
     await db.rawQuery('''
       CREATE TABLE $table_2 (
         $columnid_2 INTEGER PRIMARY KEY AUTOINCREMENT,
-        $foreignColumn INTEGER NOT NULL,
-        $columnName_2 TEXT NOT NULL,
+        $foreignColumn INTEGER,
+        $columnName_2 TEXT,
         $columnSuit_2 TEXT,
         $columnUrl_2 TEXT,
         FOREIGN KEY ($foreignColumn) REFERENCES folders($columnid_1) ON DELETE CASCADE
@@ -60,4 +60,19 @@ class DatabaseHelper {
     return await db.query(DatabaseHelper.table_1);
   }
   
+  Future<int> insertCard(String cardname,String suit, String imageurl) async {
+    final db = await DatabaseHelper.initializeDatabase();
+    return await db.insert(
+      DatabaseHelper.table_2,
+      {
+      DatabaseHelper.columnName_2: cardname,
+      DatabaseHelper.columnSuit_2: suit,
+      DatabaseHelper.columnUrl_2 : imageurl,
+    });
+  }
+
+   Future<List<Map<String, dynamic>>> getCards() async {
+    final db = await initializeDatabase();
+    return await db.query(DatabaseHelper.table_2);
+  }
 }
